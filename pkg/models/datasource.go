@@ -144,7 +144,7 @@ type AddDataSourceCommand struct {
 	IsDefault         bool              `json:"isDefault"`
 	JsonData          *simplejson.Json  `json:"jsonData"`
 	SecureJsonData    map[string]string `json:"secureJsonData"`
-	ReadOnly          bool              `json:"readOnly"`
+	ReadOnly          bool
 
 	OrgId int64 `json:"-"`
 
