@@ -130,6 +130,9 @@ var (
 	ExternalUserMngInfo     string
 	OAuthAutoLogin          bool
 	ViewersCanEdit          bool
+	IvDisableCommunitySite  bool
+	IvDocumentationUrl      string
+	IvSdwanUsers            bool
 
 	// Http auth
 	AdminUser            string
@@ -789,6 +792,10 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	}
 	ViewersCanEdit = users.Key("viewers_can_edit").MustBool(false)
 	cfg.EditorsCanAdmin = users.Key("editors_can_admin").MustBool(false)
+
+	IvDisableCommunitySite = users.Key("iv_disable_community_site").MustBool(false)
+	IvDocumentationUrl = users.Key("iv_documentation_url").MustString("http://docs.grafana.org")
+	IvSdwanUsers = users.Key("iv_sdwan_users").MustBool(false)
 
 	// auth
 	auth := iniFile.Section("auth")

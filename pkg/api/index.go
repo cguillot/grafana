@@ -150,12 +150,13 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		})
 	}
 
-	if c.IsSignedIn {
+	if c.IsSignedIn && !setting.IvSdwanUsers {
 		// Only set login if it's different from the name
 		var login string
 		if c.SignedInUser.Login != c.SignedInUser.NameOrFallback() {
 			login = c.SignedInUser.Login
 		}
+
 		profileNode := &dtos.NavLink{
 			Text:         c.SignedInUser.NameOrFallback(),
 			SubTitle:     login,
@@ -271,13 +272,15 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		})
 	}
 
-	configNodes = append(configNodes, &dtos.NavLink{
-		Text:        "Plugins",
-		Id:          "plugins",
-		Description: "View and configure plugins",
-		Icon:        "gicon gicon-plugins",
-		Url:         setting.AppSubUrl + "/plugins",
-	})
+	if !setting.IvSdwanUsers {
+		configNodes = append(configNodes, &dtos.NavLink{
+			Text:        "Plugins",
+			Id:          "plugins",
+			Description: "View and configure plugins",
+			Icon:        "gicon gicon-plugins",
+			Url:         setting.AppSubUrl + "/plugins",
+		})
+	}
 
 	if c.OrgRole == m.ROLE_ADMIN {
 		configNodes = append(configNodes, &dtos.NavLink{
@@ -296,14 +299,16 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		})
 	}
 
-	data.NavTree = append(data.NavTree, &dtos.NavLink{
-		Id:       "cfg",
-		Text:     "Configuration",
-		SubTitle: "Organization: " + c.OrgName,
-		Icon:     "gicon gicon-cog",
-		Url:      configNodes[0].Url,
-		Children: configNodes,
-	})
+	if len(configNodes) > 0 {
+		data.NavTree = append(data.NavTree, &dtos.NavLink{
+			Id:       "cfg",
+			Text:     "Configuration",
+			SubTitle: "Organization: " + c.OrgName,
+			Icon:     "gicon gicon-cog",
+			Url:      configNodes[0].Url,
+			Children: configNodes,
+		})
+	}
 
 	if c.IsGrafanaAdmin {
 		data.NavTree = append(data.NavTree, &dtos.NavLink{
@@ -322,7 +327,7 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		})
 	}
 
-	data.NavTree = append(data.NavTree, &dtos.NavLink{
+	helpNode := &dtos.NavLink{
 		Text:         "Help",
 		SubTitle:     fmt.Sprintf(`%s v%s (%s)`, setting.ApplicationName, setting.BuildVersion, setting.BuildCommit),
 		Id:           "help",
@@ -331,10 +336,28 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		HideFromMenu: true,
 		Children: []*dtos.NavLink{
 			{Text: "Keyboard shortcuts", Url: "/shortcuts", Icon: "fa fa-fw fa-keyboard-o", Target: "_self"},
-			{Text: "Community site", Url: "http://community.grafana.com", Icon: "fa fa-fw fa-comment", Target: "_blank"},
-			{Text: "Documentation", Url: "http://docs.grafana.org", Icon: "fa fa-fw fa-file", Target: "_blank"},
 		},
-	})
+	}
+
+	if !setting.IvSdwanUsers {
+		if !setting.IvDisableCommunitySite {
+			helpNode.Children = append(helpNode.Children, &dtos.NavLink{
+				Text:   "Community site",
+				Url:    "http://community.grafana.com",
+				Icon:   "fa fa-fw fa-comment",
+				Target: "_blank",
+			})
+		}
+
+		helpNode.Children = append(helpNode.Children, &dtos.NavLink{
+			Text:   "Documentation",
+			Url:    setting.IvDocumentationUrl,
+			Icon:   "fa fa-fw fa-file",
+			Target: "_blank",
+		})
+	}
+
+	data.NavTree = append(data.NavTree, helpNode)
 
 	hs.HooksService.RunIndexDataHooks(&data)
 	return &data, nil

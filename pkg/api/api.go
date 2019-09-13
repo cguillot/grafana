@@ -11,6 +11,7 @@ import (
 
 func (hs *HTTPServer) registerRoutes() {
 	reqSignedIn := middleware.ReqSignedIn
+	requSignedInNotIvSdwanUser := middleware.RequSignedInNotIvSdwanUser
 	reqGrafanaAdmin := middleware.ReqGrafanaAdmin
 	reqEditorRole := middleware.ReqEditorRole
 	reqOrgAdmin := middleware.ReqOrgAdmin
@@ -32,9 +33,9 @@ func (hs *HTTPServer) registerRoutes() {
 	r.Get("/invite/:code", hs.Index)
 
 	// authed views
-	r.Get("/profile/", reqSignedIn, hs.Index)
-	r.Get("/profile/password", reqSignedIn, hs.Index)
-	r.Get("/profile/switch-org/:id", reqSignedIn, hs.ChangeActiveOrgAndRedirectToHome)
+	r.Get("/profile/", requSignedInNotIvSdwanUser, hs.Index)
+	r.Get("/profile/password", requSignedInNotIvSdwanUser, hs.Index)
+	r.Get("/profile/switch-org/:id", requSignedInNotIvSdwanUser, hs.ChangeActiveOrgAndRedirectToHome)
 	r.Get("/org/", reqOrgAdmin, hs.Index)
 	r.Get("/org/new", reqGrafanaAdmin, hs.Index)
 	r.Get("/datasources/", reqOrgAdmin, hs.Index)
@@ -46,7 +47,7 @@ func (hs *HTTPServer) registerRoutes() {
 	r.Get("/org/teams", reqCanAccessTeams, hs.Index)
 	r.Get("/org/teams/*", reqCanAccessTeams, hs.Index)
 	r.Get("/org/apikeys/", reqOrgAdmin, hs.Index)
-	r.Get("/dashboard/import/", reqSignedIn, hs.Index)
+	r.Get("/dashboard/import/", requSignedInNotIvSdwanUser, hs.Index)
 	r.Get("/configuration", reqGrafanaAdmin, hs.Index)
 	r.Get("/admin", reqGrafanaAdmin, hs.Index)
 	r.Get("/admin/settings", reqGrafanaAdmin, hs.Index)
@@ -59,10 +60,10 @@ func (hs *HTTPServer) registerRoutes() {
 
 	r.Get("/styleguide", reqSignedIn, hs.Index)
 
-	r.Get("/plugins", reqSignedIn, hs.Index)
-	r.Get("/plugins/:id/", reqSignedIn, hs.Index)
-	r.Get("/plugins/:id/edit", reqSignedIn, hs.Index) // deprecated
-	r.Get("/plugins/:id/page/:page", reqSignedIn, hs.Index)
+	r.Get("/plugins", requSignedInNotIvSdwanUser, hs.Index)
+	r.Get("/plugins/:id/", requSignedInNotIvSdwanUser, hs.Index)
+	r.Get("/plugins/:id/edit", requSignedInNotIvSdwanUser, hs.Index) // deprecated
+	r.Get("/plugins/:id/page/:page", requSignedInNotIvSdwanUser, hs.Index)
 	r.Get("/a/:id/*", reqSignedIn, hs.Index) // App Root Page
 
 	r.Get("/d/:uid/:slug", reqSignedIn, hs.Index)

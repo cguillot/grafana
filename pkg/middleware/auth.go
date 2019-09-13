@@ -12,8 +12,9 @@ import (
 )
 
 type AuthOptions struct {
-	ReqGrafanaAdmin bool
-	ReqSignedIn     bool
+	ReqGrafanaAdmin    bool
+	ReqSignedIn        bool
+	ReqNotIvSdwanUsers bool
 }
 
 func getApiKey(c *m.ReqContext) string {
@@ -81,6 +82,11 @@ func Auth(options *AuthOptions) macaron.Handler {
 		}
 
 		if !c.IsGrafanaAdmin && options.ReqGrafanaAdmin {
+			accessForbidden(c)
+			return
+		}
+
+		if setting.IvSdwanUsers && options.ReqNotIvSdwanUsers {
 			accessForbidden(c)
 			return
 		}
