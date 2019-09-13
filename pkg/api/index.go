@@ -327,9 +327,16 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		})
 	}
 
+	helpSubTitle := ""
+
+	// special case when doing localhost call from phantomjs
+	if !setting.IvNoBrand {
+		helpSubTitle = fmt.Sprintf(`%s v%s (%s)`, setting.ApplicationName, setting.BuildVersion, setting.BuildCommit)
+	}
+
 	helpNode := &dtos.NavLink{
 		Text:         "Help",
-		SubTitle:     fmt.Sprintf(`%s v%s (%s)`, setting.ApplicationName, setting.BuildVersion, setting.BuildCommit),
+		SubTitle:     helpSubTitle,
 		Id:           "help",
 		Url:          "#",
 		Icon:         "gicon gicon-question",

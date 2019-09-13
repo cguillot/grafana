@@ -101,6 +101,7 @@ var (
 	StrictTransportSecurityMaxAge     int
 	StrictTransportSecurityPreload    bool
 	StrictTransportSecuritySubDomains bool
+	IvNoBrand                         bool
 
 	// Snapshots
 	ExternalSnapshotUrl   string
@@ -719,6 +720,8 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	StrictTransportSecurityMaxAge = security.Key("strict_transport_security_max_age_seconds").MustInt(86400)
 	StrictTransportSecurityPreload = security.Key("strict_transport_security_preload").MustBool(false)
 	StrictTransportSecuritySubDomains = security.Key("strict_transport_security_subdomains").MustBool(false)
+
+	IvNoBrand = security.Key("iv_no_brand").MustBool(false)
 
 	// read snapshots settings
 	snapshots := iniFile.Section("snapshots")
