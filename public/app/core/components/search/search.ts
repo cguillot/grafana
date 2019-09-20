@@ -2,7 +2,7 @@ import _, { debounce } from 'lodash';
 import coreModule from '../../core_module';
 import { SearchSrv } from 'app/core/services/search_srv';
 import { contextSrv } from 'app/core/services/context_srv';
-
+import config from 'app/core/config';
 import appEvents from 'app/core/app_events';
 import { parse, SearchParserOptions, SearchParserResult } from 'search-query-parser';
 import { getDashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
@@ -343,4 +343,6 @@ export function searchDirective() {
   };
 }
 
-coreModule.directive('dashboardSearch', searchDirective);
+if (!config.isSdwanUsers) {
+  coreModule.directive('dashboardSearch', searchDirective);
+}

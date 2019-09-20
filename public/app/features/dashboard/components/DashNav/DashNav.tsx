@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 // Utils & Services
+import config from 'app/core/config';
 import { appEvents } from 'app/core/app_events';
 import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 
@@ -137,9 +138,12 @@ export class DashNav extends PureComponent<Props> {
                 <i className="fa fa-chevron-right navbar-page-btn__folder-icon" />
               </>
             )}
-            <a onClick={this.onDahboardNameClick}>
-              {dashboard.title} <i className="fa fa-caret-down navbar-page-btn__search" />
-            </a>
+            {!config.isSdwanUsers && (
+              <a onClick={this.onDahboardNameClick}>
+                {dashboard.title} <i className="fa fa-caret-down navbar-page-btn__search" />
+              </a>
+            )}
+            {config.isSdwanUsers && <span>{dashboard.title}</span>}
           </div>
         </div>
         {this.isSettings && <span className="navbar-settings-title">&nbsp;/ Settings</span>}

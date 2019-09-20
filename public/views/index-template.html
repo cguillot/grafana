@@ -183,7 +183,9 @@
   </div>
 
   <grafana-app class="grafana-app" ng-cloak>
+    [[if not .Settings.isSdwanUsers]]
     <sidemenu class="sidemenu"></sidemenu>
+    [[end]]
     <app-notifications-list class="page-alert-list"></app-notifications-list>
     <dashboard-search></dashboard-search>
 

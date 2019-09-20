@@ -111,4 +111,6 @@ export class ProfileCtrl {
   }
 }
 
-coreModule.controller('ProfileCtrl', ProfileCtrl);
+if (!config.isSdwanUsers) {
+  coreModule.controller('ProfileCtrl', ProfileCtrl);
+}

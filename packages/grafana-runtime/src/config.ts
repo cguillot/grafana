@@ -39,6 +39,7 @@ export class GrafanaBootConfig {
   viewersCanEdit = false;
   editorsCanAdmin = false;
   disableSanitizeHtml = false;
+  isSdwanUsers = false;
   theme: GrafanaTheme;
   pluginsToPreload: string[] = [];
 
@@ -62,6 +63,7 @@ export class GrafanaBootConfig {
       viewersCanEdit: false,
       editorsCanAdmin: false,
       disableSanitizeHtml: false,
+      isSdwanUsers: false,
     };
 
     extend(this, defaults, options);
