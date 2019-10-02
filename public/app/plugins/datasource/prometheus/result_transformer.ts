@@ -3,6 +3,8 @@ import TableModel from 'app/core/table_model';
 import { TimeSeries, FieldType } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 
+import config from 'app/core/config';
+
 export class ResultTransformer {
   constructor(private templateSrv: TemplateSrv) {}
 
@@ -102,7 +104,7 @@ export class ResultTransformer {
     table.columns.push({ text: 'Time', type: FieldType.time });
     _.each(sortedLabels, (label, labelIndex) => {
       metricLabels[label] = labelIndex + 1;
-      table.columns.push({ text: label, filterable: true });
+      table.columns.push({ text: label, filterable: !config.isSdwanUsers });
     });
     const valueText = resultCount > 1 || valueWithRefId ? `Value #${refId}` : 'Value';
     table.columns.push({ text: valueText });
