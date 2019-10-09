@@ -256,14 +256,16 @@ export class DashNav extends PureComponent<Props> {
           )}
         </div>
 
-        <div className="navbar-buttons navbar-buttons--tv">
-          <DashNavButton
-            tooltip="Cycle view mode"
-            classSuffix="tv"
-            icon="fa fa-desktop"
-            onClick={this.onToggleTVMode}
-          />
-        </div>
+        {!config.isSdwanUsers && (
+          <div className="navbar-buttons navbar-buttons--tv">
+            <DashNavButton
+              tooltip="Cycle view mode"
+              classSuffix="tv"
+              icon="fa fa-desktop"
+              onClick={this.onToggleTVMode}
+            />
+          </div>
+        )}
 
         {!dashboard.timepicker.hidden && (
           <div className="navbar-buttons">
